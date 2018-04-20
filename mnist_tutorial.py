@@ -82,6 +82,7 @@ def main(_):
 #   FLAGS, unparsed = parser.parse_known_args()
 tf.app.run(main=main)#, argv=[sys.argv[0]] + unparsed)
 
+
 # https://stats.stackexchange.com/questions/308777/why-are-there-no-deep-reinforcement-learning-engines-for-chess-similar-to-alpha
 # https://arxiv.org/pdf/1509.01549.pdf
 # https://www.technologyreview.com/s/541276/deep-learning-machine-teaches-itself-chess-in-72-hours-plays-at-international-master/
