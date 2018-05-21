@@ -5,6 +5,7 @@ from __future__ import print_function
 import tensorflow as tf
 import argparse
 import sys
+import numpy as np
 
 from tensorflow.examples.tutorials.mnist import input_data
 mnist = input_data.read_data_sets("tmp/tensorflow/mnist/input_data/MNIST_data")#, one_hot=True)
@@ -70,6 +71,23 @@ def main(_):
           x: mnist.test.images,
           y_: mnist.test.labels
       }))
+
+  count = 0
+  for i in mnist.train.images[0]:
+      if i > 0:
+          print("X", end=' ')
+      else:
+          print(".", end=' ')
+
+      count += 1
+      if (count%28 == 0):
+          print(" ")
+
+  new_x = np.reshape(mnist.train.images[0], (1, 784))
+  output1 = tf.matmul(new_x, W) + b
+  print(sess.run(output1))
+  print(sess.run(tf.argmax(output1, 1)))
+  print(mnist.train.labels[0])
 
 
 # if __name__ == '__main__':
