@@ -44,36 +44,41 @@ def neural_network_model(data):
 
     l4 = tf.add(tf.matmul(l3,hidden_4_layer['weights']), hidden_4_layer['biases'])
     l4 = tf.nn.relu(l4)
-    
+
 
     output = tf.matmul(l4,output_layer['weights']) + output_layer['biases']
 
     return output
 
-    # tf.contrib.slim -- creating layers
 
 def train_neural_network(x):
     prediction = neural_network_model(x)
 
-    cost = tf.reduce_mean( tf.nn.softmax_cross_entropy_with_logits(logits=prediction, labels=y) )
+    cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=prediction, labels=y))
     optimizer = tf.train.AdamOptimizer().minimize(cost)
 
-    hm_epochs = 10
-    with tf.Session() as sess:
-        sess.run(tf.global_variables_initializer())
+    hm_epochs = 1
+    # 0 epochs: accuracy = 0.1, 1 epoch: accuracy = 0.9
 
-        for epoch in range(hm_epochs):
-            epoch_loss = 0
-            for _ in range(int(mnist.train.num_examples/batch_size)):
-                epoch_x, epoch_y = mnist.train.next_batch(batch_size)
-                _, c = sess.run([optimizer, cost], feed_dict={x: epoch_x, y: epoch_y})
-                epoch_loss += c
+    sess = tf.Session()
+    sess.run(tf.global_variables_initializer())
 
-            print('Epoch', epoch, 'completed out of',hm_epochs,'loss:',epoch_loss)
+    for epoch in range(hm_epochs):
+        epoch_loss = 0
 
-        correct = tf.equal(tf.argmax(prediction, 1), tf.argmax(y, 1))
+        for _ in range(int(mnist.train.num_examples/batch_size)):
+            epoch_x, epoch_y = mnist.train.next_batch(batch_size)
+            _, c = sess.run([optimizer, cost], feed_dict={x: epoch_x, y: epoch_y})
+            # the _, converts c to be a float32 from a list as it says ignore the first [optimizer] value
+            epoch_loss += c
 
-        accuracy = tf.reduce_mean(tf.cast(correct, 'float'))
+
+        print('Epoch', epoch, 'completed out of',hm_epochs,'loss:',epoch_loss)
+
+    correct = tf.equal(tf.argmax(prediction, 1), tf.argmax(y, 1))
+
+    accuracy = tf.reduce_mean(tf.cast(correct, 'float'))
+    with sess.as_default():
         print('Accuracy:',accuracy.eval({x:mnist.test.images, y:mnist.test.labels}))
 
 train_neural_network(x)
