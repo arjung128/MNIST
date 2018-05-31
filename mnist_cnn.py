@@ -28,10 +28,10 @@ def convolutional_neural_network(x):
 
     x = tf.reshape(x, shape=[-1, 28, 28, 1])
 
-    conv1 = tf.nn.conv2d(x, weights['W_conv1'], strides=[1, 1, 1, 1], padding='SAME')
+    conv1 = tf.nn.conv2d(x, weights['W_conv1'] + biases['b_conv1'], strides=[1, 1, 1, 1], padding='SAME')
     conv1 = tf.nn.max_pool(conv1, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
 
-    conv2 = tf.nn.conv2d(conv1, weights['W_conv2'], strides=[1, 1, 1, 1], padding='SAME')
+    conv2 = tf.nn.conv2d(conv1, weights['W_conv2'] + biases['b_conv2'], strides=[1, 1, 1, 1], padding='SAME')
     conv2 = tf.nn.max_pool(conv2, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
 
     fc = tf.reshape(conv2, [-1, 7*7*64])
